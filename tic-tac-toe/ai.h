@@ -5,7 +5,7 @@
 #include "state.h"
 
 struct Node {
-  Node(State* s) { state = s; }
+  Node(State* s) : state(s) {}
 
   State* state;
   std::vector<Node*> children;
@@ -20,9 +20,12 @@ public:
   void GetNextInput(State& state, int& x, int& y);
 
 private:
+  const int kMaxInt = std::numeric_limits<int>::max();
+  const int kMinInt = std::numeric_limits<int>::min();
+
   int AlphaBetaPruning(
     Node* node, int depth, int alpha, int beta, bool maximizingPlayer);
-  
+
   int level_;
 };
 

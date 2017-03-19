@@ -1,11 +1,25 @@
 #include "ai.h"
+#include <limits>
 #include <algorithm>
 
 void AI::GetNextInput(State& state, int& x, int& y) {
   Node* root = new Node(&state);
 
-  root->value = AlphaBetaPruning(root, level_, -9, 9, false);
+  const char player = state.get_player();
+  bool maximizingPlayer;
+  if (player == 'x') {
+    maximizingPlayer = true;
+  }
+  else {
+    maximizingPlayer = false;
+  }
 
+  
+  root->value = AlphaBetaPruning(
+    root, level_, kMinInt, kMaxInt, maximizingPlayer);
+
+  // TODO: if multiple children avaliable,
+  // choose one has higher probability to win
   for (auto child : root->children) {
     if (child->value == root->value) {
       state.GetPlace(*(child->state), x, y);
@@ -37,7 +51,7 @@ int AI::AlphaBetaPruning(
 
   int best_value;
   if (maximizingPlayer) {
-    best_value = -9;
+    best_value = kMinInt;
     for (auto child : node->children) {
       best_value = std::max(best_value,
         AlphaBetaPruning(child, depth - 1, alpha, beta, false));
@@ -50,7 +64,7 @@ int AI::AlphaBetaPruning(
     return best_value;
   }
   else {
-    best_value = 9;
+    best_value = kMaxInt;
     for (auto child : node->children) {
       best_value = std::min(best_value,
         AlphaBetaPruning(child, depth - 1, alpha, beta, true));
