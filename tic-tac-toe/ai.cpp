@@ -13,7 +13,6 @@ void AI::GetNextInput(State& state, int& x, int& y) {
   else {
     maximizingPlayer = false;
   }
-
   
   root->value = AlphaBetaPruning(
     root, level_, kMinInt, kMaxInt, maximizingPlayer);
