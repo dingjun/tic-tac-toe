@@ -121,12 +121,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ai.cpp" />
+    <ClCompile Include="application.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="state.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ai.h" />
-    <ClInclude Include="cleanup.h" />
+    <ClInclude Include="application.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="state.h" />
   </ItemGroup>
