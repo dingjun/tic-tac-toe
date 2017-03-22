@@ -161,50 +161,38 @@ void Application::Render() {
   SDL_RenderPresent(renderer);
 }
 
-/*
-* Log an SDL error with some error message to the output stream of our choice
-* @param os The output stream to write the message to
-* @param msg The error message to write, format will be msg error: SDL_GetError()
-*/
-void Application::LogSDLError(std::ostream& os, const std::string& msg) {
+void Application::LogSDLError(std::ostream& os, const std::string& msg) const {
   os << msg << " error: " << SDL_GetError() << std::endl;
 }
 
-
-template<typename T, typename ...Args>
-inline void Application::Cleanup(T * t, Args && ...args) {
+template<typename T, typename... Args>
+inline void Application::Cleanup(T* t, Args&&... args) {
   // clean up the first item in the list
   Cleanup(t);
   // recurse to clean up the remaining arguments
   Cleanup(std::forward<Args>(args)...);
 }
 
-/*
-* These specializations serve to free the passed argument and also provide the
-* base cases for the recursive call above, eg. when args is only a single item
-* one of the specializations below will be called by
-* cleanup(std::forward<Args>(args)...), ending the recursion.
-*/
 template<>
-inline void Application::Cleanup<SDL_Window>(SDL_Window *window) {
+inline void Application::Cleanup<SDL_Window>(SDL_Window* window) {
   if (window) {
     SDL_DestroyWindow(window);
   }
 }
 template<>
-inline void Application::Cleanup<SDL_Renderer>(SDL_Renderer *renderer) {
+inline void Application::Cleanup<SDL_Renderer>(SDL_Renderer* renderer) {
   if (renderer) {
     SDL_DestroyRenderer(renderer);
   }
 }
 template<>
-inline void Application::Cleanup<SDL_Texture>(SDL_Texture *texture) {
+inline void Application::Cleanup<SDL_Texture>(SDL_Texture* texture) {
   if (texture) {
     SDL_DestroyTexture(texture);
   }
 }
 template<>
-inline void Application::Cleanup<SDL_Surface>(SDL_Surface *surface) {
+inline void Application::Cleanup<SDL_Surface>(SDL_Surface* surface) {
   if (surface) {
     SDL_FreeSurface(surface);
   }

@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <string>
-#include <utility>
 #include <SDL.h>
 #include <SDL_image.h>
 #include "state.h"
@@ -24,7 +23,7 @@ private:
   void Update();
   void Render();
 
-  void LogSDLError(std::ostream& os, const std::string& msg);
+  void LogSDLError(std::ostream& os, const std::string& msg) const;
 
   /*
   * Recurse through the list of arguments to clean up, cleaning up
@@ -32,7 +31,7 @@ private:
   */
   template<typename T, typename... Args>
   void Cleanup(T* t, Args&&... args);
-  
+
   /*
   * These specializations serve to free the passed argument and also provide the
   * base cases for the recursive call above, eg. when args is only a single item
@@ -48,12 +47,12 @@ private:
   template<>
   inline void Cleanup<SDL_Surface>(SDL_Surface *surface);
 
-  SDL_Window* window;
-  SDL_Renderer* renderer;
-  std::string title;
-
   State state;
   AI ai;
+  
+  std::string title;
+  SDL_Window* window;
+  SDL_Renderer* renderer;
 };
 
 #endif  // APPLICATION_H_
