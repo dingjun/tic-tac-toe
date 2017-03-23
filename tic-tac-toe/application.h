@@ -11,9 +11,12 @@
 
 class Application {
 public:
-  Application() : title("Tic-tac-toe"), window(nullptr), renderer(nullptr) {}
+  Application() : title_("Tic-tac-toe"), window_(nullptr), renderer_(nullptr) {}
 
   int Execute();
+
+  inline SDL_Renderer* get_renderer() { return renderer_; }
+  inline SDL_Texture* get_texture(int id) { return textures_[id]; }
 
 private:
   static const int kWindowWidth = 390;
@@ -50,10 +53,10 @@ private:
   State state;
   AI ai;
 
-  std::string title;
-  SDL_Window* window;
-  SDL_Renderer* renderer;
-  std::vector<SDL_Texture*> textures;
+  std::string title_;
+  SDL_Window* window_;
+  SDL_Renderer* renderer_;
+  std::vector<SDL_Texture*> textures_;
 };
 
 #endif  // APPLICATION_H_

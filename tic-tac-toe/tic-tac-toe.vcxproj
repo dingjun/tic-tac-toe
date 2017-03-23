@@ -124,12 +124,14 @@
     <ClCompile Include="application.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="state.cpp" />
+    <ClCompile Include="unit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ai.h" />
     <ClInclude Include="application.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="state.h" />
+    <ClInclude Include="unit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

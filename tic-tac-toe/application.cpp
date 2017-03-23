@@ -43,19 +43,19 @@ bool Application::Initialize() {
   }
 
   // setup window
-  window = SDL_CreateWindow(
-    title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+  window_ = SDL_CreateWindow(
+    title_.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
     kWindowWidth, kWindowHeight, SDL_WINDOW_SHOWN);
-  if (window == nullptr) {
+  if (window_ == nullptr) {
     LogSDLError(std::cout, "SDL_CreateWindow");
     Cleanup();
     return false;
   }
 
   // setup renderer
-  renderer = SDL_CreateRenderer(
-    window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-  if (renderer == nullptr) {
+  renderer_ = SDL_CreateRenderer(
+    window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  if (renderer_ == nullptr) {
     LogSDLError(std::cout, "SDL_CreateRenderer");
     Cleanup();
     return false;
@@ -65,10 +65,10 @@ bool Application::Initialize() {
   std::string board_file = kResPath + "board.png";
   std::string x_file = kResPath + "x.png";
   std::string o_file = kResPath + "o.png";
-  textures.push_back(IMG_LoadTexture(renderer, board_file.c_str()));
-  textures.push_back(IMG_LoadTexture(renderer, x_file.c_str()));
-  textures.push_back(IMG_LoadTexture(renderer, o_file.c_str()));
-  for (auto texture : textures) {
+  textures_.push_back(IMG_LoadTexture(renderer_, board_file.c_str()));
+  textures_.push_back(IMG_LoadTexture(renderer_, x_file.c_str()));
+  textures_.push_back(IMG_LoadTexture(renderer_, o_file.c_str()));
+  for (auto texture : textures_) {
     if (texture == nullptr) {
       Cleanup();
       return false;
@@ -131,18 +131,18 @@ void Application::Update() {
 }
 
 void Application::Render() {
-  SDL_RenderClear(renderer);
-  RenderTexture(textures[0], 0, 0);
-  RenderTexture(textures[1], 0, 0);
-  RenderTexture(textures[1], 130, 0);
-  RenderTexture(textures[1], 260, 0);
-  RenderTexture(textures[1], 0, 130);
-  RenderTexture(textures[1], 130, 130);
-  RenderTexture(textures[1], 260, 130);
-  RenderTexture(textures[1], 0, 260);
-  RenderTexture(textures[1], 130, 260);
-  RenderTexture(textures[1], 260, 260);
-  SDL_RenderPresent(renderer);
+  SDL_RenderClear(renderer_);
+  RenderTexture(textures_[0], 0, 0);
+  RenderTexture(textures_[1], 0, 0);
+  RenderTexture(textures_[1], 130, 0);
+  RenderTexture(textures_[1], 260, 0);
+  RenderTexture(textures_[1], 0, 130);
+  RenderTexture(textures_[1], 130, 130);
+  RenderTexture(textures_[1], 260, 130);
+  RenderTexture(textures_[1], 0, 260);
+  RenderTexture(textures_[1], 130, 260);
+  RenderTexture(textures_[1], 260, 260);
+  SDL_RenderPresent(renderer_);
 }
 
 void Application::RenderTexture(SDL_Texture* texture,
@@ -156,20 +156,20 @@ void Application::RenderTexture(SDL_Texture* texture,
   rect.y = y;
   rect.w = w;
   rect.h = h;
-  SDL_RenderCopy(renderer, texture, NULL, &rect);
+  SDL_RenderCopy(renderer_, texture, NULL, &rect);
 }
 
 void Application::Cleanup() {
-  for (auto texture : textures) {
+  for (auto texture : textures_) {
     if (texture) {
       SDL_DestroyTexture(texture);
     }
   }
-  if (renderer) {
-    SDL_DestroyRenderer(renderer);
+  if (renderer_) {
+    SDL_DestroyRenderer(renderer_);
   }
-  if (window) {
-    SDL_DestroyWindow(window);
+  if (window_) {
+    SDL_DestroyWindow(window_);
   }
 
   IMG_Quit();
