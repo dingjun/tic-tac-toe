@@ -8,6 +8,9 @@
 #include <SDL_image.h>
 #include "state.h"
 #include "ai.h"
+#include "unit.h"
+
+class Unit;
 
 class Application {
 public:
@@ -21,6 +24,7 @@ public:
 private:
   static const int kWindowWidth = 390;
   static const int kWindowHeight = 390;
+  static const int kGridSize = 130;
   static const std::string kResPath;
 
   bool Initialize();                              // initialize SDL application
@@ -50,13 +54,14 @@ private:
   */
   void LogSDLError(std::ostream& os, const std::string& msg) const;
 
-  State state;
-  AI ai;
+  State state_;
+  AI ai_;
 
   std::string title_;
   SDL_Window* window_;
   SDL_Renderer* renderer_;
   std::vector<SDL_Texture*> textures_;
+  std::vector<Unit*> units_;
 };
 
 #endif  // APPLICATION_H_

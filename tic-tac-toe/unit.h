@@ -4,6 +4,8 @@
 #include <SDL.h>
 #include "application.h"
 
+class Application;
+
 class Unit {
 public:
   Unit(SDL_Texture* texture, const SDL_Point& point);

@@ -7,6 +7,11 @@ int Application::Execute() {
     return 1;
   }
 
+  // create board
+  SDL_Point point = { 0, 0 };
+  Unit* board = new Unit(textures_[0], point);
+  units_.push_back(board);
+
   SDL_Event event;
   bool quit = false;
   while (quit == false) {
@@ -81,8 +86,19 @@ void Application::PollEvent(const SDL_Event& event, bool& quit) {
   switch (event.type) {
   case SDL_MOUSEBUTTONDOWN:
     // get mouse position
-    int x, y;
-    SDL_GetMouseState(&x, &y);
+    SDL_Point point;
+    SDL_GetMouseState(&point.x, &point.y);
+    point.x -= (point.x % kGridSize);
+    point.y -= (point.y % kGridSize);
+
+    SDL_Texture* texture;
+    if (state_.get_player() == 'x') {
+      texture = textures_[1];
+    }
+    else {
+      texture = textures_[2];
+    }
+    units_.push_back(new Unit(texture, point));
 
     break;
   case SDL_KEYDOWN:
@@ -100,48 +116,41 @@ void Application::Update() {
 
   // TODO use gui
   while (true) {
-    state.Print();
+    state_.Print();
 
-    if (state.value() != 0) {
-      std::cout << "-- player " << state.get_opponent() << " wins" << std::endl;
+    if (state_.value() != 0) {
+      std::cout << "-- player " << state_.get_opponent() << " wins" << std::endl;
       break;
     }
-    if (state.draw()) {
+    if (state_.draw()) {
       std::cout << "-- Draw" << std::endl;
       break;
     }
 
     int x;
     int y;
-    char player = state.get_player();
+    char player = state_.get_player();
     std::cout << "player '" << player << "'> ";
     if (player == 'x') {
       std::cin.clear();
       std::cin >> x >> y;
     }
     else {
-      ai.GetNextInput(state, x, y);
+      ai_.GetNextInput(state_, x, y);
       std::cout << x << " " << y << std::endl;
     }
 
-    state.Place(x, y);
+    state_.Place(x, y);
 
-    state.NextPlayer();
+    state_.NextPlayer();
   }
 }
 
 void Application::Render() {
   SDL_RenderClear(renderer_);
-  RenderTexture(textures_[0], 0, 0);
-  RenderTexture(textures_[1], 0, 0);
-  RenderTexture(textures_[1], 130, 0);
-  RenderTexture(textures_[1], 260, 0);
-  RenderTexture(textures_[1], 0, 130);
-  RenderTexture(textures_[1], 130, 130);
-  RenderTexture(textures_[1], 260, 130);
-  RenderTexture(textures_[1], 0, 260);
-  RenderTexture(textures_[1], 130, 260);
-  RenderTexture(textures_[1], 260, 260);
+  for (auto unit : units_) {
+    unit->Render(renderer_);
+  }
   SDL_RenderPresent(renderer_);
 }
 
