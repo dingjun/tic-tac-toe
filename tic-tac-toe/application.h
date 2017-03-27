@@ -28,7 +28,7 @@ private:
   static const std::string kResPath;
 
   bool Initialize();                              // initialize SDL application
-  void PollEvent(const SDL_Event& event, bool& quit);     // capture SDL Events
+  bool PollEvent(const SDL_Event& event, SDL_Point& point, bool& quit);
   void Update();
   void Render();
 

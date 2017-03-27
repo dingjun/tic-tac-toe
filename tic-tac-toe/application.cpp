@@ -12,15 +12,50 @@ int Application::Execute() {
   Unit* board = new Unit(textures_[0], point);
   units_.push_back(board);
 
-  SDL_Event event;
   bool quit = false;
   while (quit == false) {
+    char player = state_.get_player();
+
     // poll event
+    SDL_Event event;
+    SDL_Point point;
+    bool input = false;
     while (SDL_PollEvent(&event) != 0) {
-      PollEvent(event, quit);
+      input = PollEvent(event, point, quit);
     }
 
-    //Update();
+    if (player == 'o') {
+      state_.Print();
+      ai_.GetNextInput(state_, point.x, point.y);
+      point.x *= kGridSize;
+      point.y *= kGridSize;
+      input = true;
+    }
+
+    if (input == true) {
+      // add unit
+      SDL_Texture* texture;
+      if (player == 'x') {
+        texture = textures_[1];
+      }
+      else {
+        texture = textures_[2];
+      }
+      units_.push_back(new Unit(texture, point));
+
+      state_.Place(point.x / kGridSize, point.y / kGridSize);
+      state_.NextPlayer();
+    }
+    
+    if (state_.value() != 0) {
+      std::cout << "-- player " << state_.get_opponent() << " wins" << std::endl;
+      quit = true;
+    }
+    if (state_.draw()) {
+      std::cout << "-- Draw" << std::endl;
+      quit = true;
+    }
+
     Render();
   }
 
@@ -82,39 +117,28 @@ bool Application::Initialize() {
   return true;
 }
 
-void Application::PollEvent(const SDL_Event& event, bool& quit) {
+bool Application::PollEvent(const SDL_Event& event, SDL_Point& point, bool& quit) {
   switch (event.type) {
   case SDL_MOUSEBUTTONDOWN:
     // get mouse position
-    SDL_Point point;
     SDL_GetMouseState(&point.x, &point.y);
     point.x -= (point.x % kGridSize);
     point.y -= (point.y % kGridSize);
 
-    SDL_Texture* texture;
-    if (state_.get_player() == 'x') {
-      texture = textures_[1];
-    }
-    else {
-      texture = textures_[2];
-    }
-    units_.push_back(new Unit(texture, point));
-
-    break;
+    return true;
   case SDL_KEYDOWN:
     if (event.key.keysym.sym == SDLK_ESCAPE) {
       quit = true;
     }
-    break;
+    return false;
   case SDL_QUIT:
     quit = true;
-    break;
+    return false;
   }
 }
 
 void Application::Update() {
 
-  // TODO use gui
   while (true) {
     state_.Print();
 
